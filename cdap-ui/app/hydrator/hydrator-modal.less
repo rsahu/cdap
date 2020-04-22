@@ -22,7 +22,6 @@
 .modal.hydrator-modal {
   &.confirm-modal {
     .modal-dialog {
-      margin-top: 40vh;
       max-width: 400px;
 
       .modal-body {
@@ -515,8 +514,20 @@ body.theme-cdap {
   }
 }
 
-.modal.upgrade-modal.hydrator-modal {
-  .modal-content .modal-body { padding-top: 0; }
+.modal.upgrade-modal.hydrator-modal.node-config-modal {
+  .modal-content .modal-body {
+    padding-top: 0;
+    // 180 = 50px header + 62px modal header + 63px for footer
+    // which is inside the modal-body
+    max-height: calc(100vh - 175px);
+    overflow: hidden;
+    padding-bottom: 0;
+    overflow-y: auto;
+
+    .modal-footer {
+      border-top: 1px solid #cccccc;
+    }
+  }
   .import-error-row {
     padding: 10px;
     border-bottom: 1px solid #c9ccd6;
