@@ -95,6 +95,7 @@ public class ETLSpark extends AbstractSpark {
 
     SparkConf sparkConf = new SparkConf();
     sparkConf.set("spark.speculation", "false");
+    sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
     context.setSparkConf(sparkConf);
 
     Map<String, String> properties = context.getSpecification().getProperties();
