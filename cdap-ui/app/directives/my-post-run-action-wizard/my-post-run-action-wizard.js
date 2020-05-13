@@ -57,15 +57,17 @@ angular.module(PKG.name + '.commons')
               return $scope.mode !== 'view' && Object.keys($scope.action).length > 0;
             }
           };
-          $scope.validatePluginProperties = function(errorCallback, silentOnSuccess = false){
+          $scope.validatePluginProperties = function(action, errorCallback, silent = false){
             if ($scope.validating) {
               return;
             }
-            $scope.validating = true;
-            const action = angular.copy($scope.action);
+            if (!silent) {
+              $scope.validating = true;
+            }
+            action = action || angular.copy($scope.action);
             const errorCb = ({ errorCount, propertyErrors }) => {
-              $scope.validating = false;
-              if (!silentOnSuccess) {
+              if (!silent) {
+                $scope.validating = false;
                 $scope.errorCount = errorCount;
               } else {
                 $scope.errorCount = null;

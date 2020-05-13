@@ -49,9 +49,12 @@ angular.module(PKG.name + '.commons')
       $scope.$parent.action = vm.selectedAction;
       vm.currentStage = 2;
     };
-    vm.onActionConfigure = function(action) {
+    vm.onActionConfigure = function(action, actionCallback) {
       var fn = vm.validate();
       const callback = (errors) => {
+        if (typeof actionCallback === 'function') {
+          actionCallback();
+        }
         if (errors && Object.keys(errors).length) {
           return;
         }
@@ -60,7 +63,7 @@ angular.module(PKG.name + '.commons')
         vm.currentStage += 1;
       };
       if ('undefined' !== typeof fn) {
-        fn.call(null, callback, true);
+        fn.call(null, action, callback, true);
       }
     };
     vm.onActionConfirm = function(action) {
