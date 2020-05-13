@@ -50,9 +50,18 @@ angular.module(PKG.name + '.commons')
       vm.currentStage = 2;
     };
     vm.onActionConfigure = function(action) {
-      vm.configuredAction = action;
-      $scope.$parent.action = vm.configuredAction;
-      vm.currentStage += 1;
+      var fn = vm.validate();
+      const callback = (errors) => {
+        if (errors && Object.keys(errors).length) {
+          return;
+        }
+        vm.configuredAction = action;
+        $scope.$parent.action = vm.configuredAction;
+        vm.currentStage += 1;
+      };
+      if ('undefined' !== typeof fn) {
+        fn.call(null, callback, true);
+      }
     };
     vm.onActionConfirm = function(action) {
       if (!action) {
