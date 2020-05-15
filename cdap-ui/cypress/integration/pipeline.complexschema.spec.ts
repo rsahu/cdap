@@ -206,8 +206,8 @@ describe('Output Schema', () => {
       cy.get('[data-testid="deploy-pipeline"]').click();
       cy.url({ timeout: 60000 }).should('include', `/view/${PIPELINE_NAME}`);
 
+      // Wait to allow pipeline to finish rendering before checking node properties
       cy.wait(500);
-      cy.get('.connection-id-Wrangler-BigQueryMultiTable').should('be.visible');
 
       cy.open_node_property(sourceNodeId);
       cy.get('#macro-input-schema').should('have.value', '${source_output_schema}');
