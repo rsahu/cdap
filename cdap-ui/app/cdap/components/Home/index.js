@@ -98,6 +98,8 @@ const SecureKeys = Loadable({
   loading: LoadingSVGCentered,
 });
 
+import VirtualScrollDemo from 'components/VirtualScroll/demo';
+
 const FieldLevelLineage = Loadable({
   loader: () =>
     import(/* webpackChunkName: "FieldLevelLineage" */ 'components/FieldLevelLineage/v2'),
@@ -190,6 +192,13 @@ export default class Home extends Component {
           <Route path="/ns/:namespace/kitchen" component={ConfigurationGroupKitchenSync} />
           <Route path="/ns/:namespace/replicator" component={Replicator} />
           <Route path="/ns/:namespace/lab" component={Lab} />
+          <Route
+            exact
+            path="/ns/:namespace/vs"
+            render={() => {
+              return <VirtualScrollDemo />;
+            }}
+          />
           <Route
             exact
             path="/ns/:namespace/lab-experiment-test"
