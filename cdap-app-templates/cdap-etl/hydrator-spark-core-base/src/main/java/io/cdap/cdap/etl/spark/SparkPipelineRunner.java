@@ -55,6 +55,7 @@ import io.cdap.cdap.etl.common.DefaultMacroEvaluator;
 import io.cdap.cdap.etl.common.NoopStageStatisticsCollector;
 import io.cdap.cdap.etl.common.PipelinePhase;
 import io.cdap.cdap.etl.common.RecordInfo;
+import io.cdap.cdap.etl.common.Schemas;
 import io.cdap.cdap.etl.common.StageStatisticsCollector;
 import io.cdap.cdap.etl.proto.v2.spec.StageSpec;
 import io.cdap.cdap.etl.spark.function.AlertPassFilter;
@@ -87,6 +88,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
 
 /**
  * Base Spark program to run a Hydrator pipeline.
@@ -373,7 +375,7 @@ public abstract class SparkPipelineRunner {
       // it is checked by PipelinePhasePreparer at the start of the run.
       JoinDefinition joinDefinition = autoJoiner.define(autoJoinerContext);
       failureCollector.getOrThrowException();
-      return handleAutoJoin(stageName, joinDefinition, inputDataCollections);
+      return handleAutoJoin(stageName, joinDefinition, inputDataCollections, numPartitions);
     } else {
       // should never happen unless there is a bug in the code. should have failed during deployment
       throw new IllegalStateException(String.format("Stage '%s' is an unknown joiner type %s",
@@ -386,7 +388,8 @@ public abstract class SparkPipelineRunner {
    * This amounts to gathering the SparkCollection, schema, join key, and join type for each stage involved in the join.
    */
   private SparkCollection<Object> handleAutoJoin(String stageName, JoinDefinition joinDefinition,
-                                                 Map<String, SparkCollection<Object>> inputDataCollections) {
+                                                 Map<String, SparkCollection<Object>> inputDataCollections,
+                                                 @Nullable Integer numPartitions) {
     // sort stages to join so that broadcasts happen last. This is to ensure that the left side is not a broadcast
     // so that we don't try to broadcast both sides of the join. It also causes less data to be shuffled for the
     // non-broadcast joins.
@@ -482,7 +485,7 @@ public abstract class SparkPipelineRunner {
     JoinRequest joinRequest = new JoinRequest(stageName, leftName, leftKey, leftSchema,
                                               left.isRequired(), onKeys.isNullSafe(),
                                               joinDefinition.getSelectedFields(),
-                                              joinDefinition.getOutputSchema(), toJoin);
+                                              joinDefinition.getOutputSchema(), toJoin, numPartitions);
     return leftCollection.join(joinRequest);
   }
 
@@ -556,7 +559,7 @@ public abstract class SparkPipelineRunner {
 
         Schema existingSchema = keySchema.get(keyFieldNum);
         if (existingSchema != null && existingSchema.isSimpleOrNullableSimple() &&
-          !existingSchema.equals(keyFieldSchema)) {
+          !Schemas.equalsIgnoringRecordName(existingSchema, keyFieldSchema)) {
           // this is an invalid join definition
           // this condition is normally checked at deployment time,
           // but it will be skipped if the input schema is not known.

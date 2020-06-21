@@ -16,6 +16,7 @@
 
 import withStyles, { StyleRules, WithStyles } from '@material-ui/core/styles/withStyles';
 import Content from 'components/PluginJSONCreator/Create/Content';
+import { JSONStatusMessage } from 'components/PluginJSONCreator/Create/Content/JsonMenu';
 import WizardGuideline from 'components/PluginJSONCreator/Create/WizardGuideline';
 import {
   CreateContext,
@@ -67,6 +68,85 @@ class CreateView extends React.PureComponent<ICreateContext & WithStyles<typeof 
     this.setState({ groupToInfo });
   };
 
+  public setGroupToWidgets = (groupToWidgets: any) => {
+    this.setState({ groupToWidgets });
+  };
+
+  public setWidgetInfo = (widgetInfo: any) => {
+    this.setState({ widgetInfo });
+  };
+
+  public setLiveView = (liveView: boolean) => {
+    this.setState({ liveView });
+  };
+
+  public setWidgetToAttributes = (widgetToAttributes: any) => {
+    this.setState({ widgetToAttributes });
+  };
+
+  public setOutputName = (outputName: string) => {
+    this.setState({ outputName });
+  };
+
+  public setJSONStatus = (JSONStatus: string) => {
+    this.setState({ JSONStatus });
+  };
+
+  public setFilters = (filters: string[]) => {
+    this.setState({ filters });
+  };
+
+  public setFilterToName = (filterToName: any) => {
+    this.setState({ filterToName });
+  };
+
+  public setFilterToCondition = (filterToCondition: any) => {
+    this.setState({ filterToCondition });
+  };
+
+  public setFilterToShowList = (filterToShowList: any) => {
+    this.setState({ filterToShowList });
+  };
+
+  public setShowToInfo = (showToInfo: any) => {
+    this.setState({ showToInfo });
+  };
+
+  public setPluginState = ({
+    basicPluginInfo,
+    configurationGroups,
+    groupToInfo,
+    groupToWidgets,
+    widgetInfo,
+    widgetToAttributes,
+    outputName,
+    filters,
+    filterToName,
+    filterToCondition,
+    filterToShowList,
+    showToInfo,
+  }) => {
+    const { pluginName, pluginType, displayName, emitAlerts, emitErrors } = basicPluginInfo;
+    this.setState({
+      pluginName,
+      pluginType,
+      displayName,
+      emitAlerts,
+      emitErrors,
+      configurationGroups,
+      groupToInfo,
+      groupToWidgets,
+      widgetInfo,
+      widgetToAttributes,
+      outputName,
+      filters,
+      filterToName,
+      filterToCondition,
+      filterToShowList,
+      showToInfo,
+    });
+  };
+
   public state = {
     activeStep: 0,
     pluginName: '',
@@ -76,11 +156,34 @@ class CreateView extends React.PureComponent<ICreateContext & WithStyles<typeof 
     emitErrors: false,
     configurationGroups: [],
     groupToInfo: {},
+    groupToWidgets: {},
+    widgetInfo: {},
+    widgetToAttributes: {},
+    liveView: true,
+    outputName: '',
+    JSONStatus: JSONStatusMessage.Normal,
+    filters: [],
+    filterToName: {},
+    filterToCondition: {},
+    filterToShowList: {},
+    showToInfo: {},
 
     setActiveStep: this.setActiveStep,
     setBasicPluginInfo: this.setBasicPluginInfo,
     setConfigurationGroups: this.setConfigurationGroups,
     setGroupToInfo: this.setGroupToInfo,
+    setGroupToWidgets: this.setGroupToWidgets,
+    setWidgetInfo: this.setWidgetInfo,
+    setWidgetToAttributes: this.setWidgetToAttributes,
+    setLiveView: this.setLiveView,
+    setOutputName: this.setOutputName,
+    setPluginState: this.setPluginState,
+    setJSONStatus: this.setJSONStatus,
+    setFilters: this.setFilters,
+    setFilterToName: this.setFilterToName,
+    setFilterToCondition: this.setFilterToCondition,
+    setFilterToShowList: this.setFilterToShowList,
+    setShowToInfo: this.setShowToInfo,
   };
 
   public render() {

@@ -17,6 +17,7 @@
 import withStyles, { StyleRules, WithStyles } from '@material-ui/core/styles/withStyles';
 import Heading, { HeadingTypes } from 'components/Heading';
 import { PluginTypes } from 'components/PluginJSONCreator/constants';
+import JsonMenu from 'components/PluginJSONCreator/Create/Content/JsonMenu';
 import PluginInput from 'components/PluginJSONCreator/Create/Content/PluginInput';
 import StepButtons from 'components/PluginJSONCreator/Create/Content/StepButtons';
 import {
@@ -44,6 +45,22 @@ const BasicPluginInfoView: React.FC<ICreateContext & WithStyles<typeof styles>> 
   emitAlerts,
   emitErrors,
   setBasicPluginInfo,
+  configurationGroups,
+  groupToInfo,
+  groupToWidgets,
+  widgetInfo,
+  widgetToAttributes,
+  liveView,
+  setLiveView,
+  outputName,
+  setPluginState,
+  JSONStatus,
+  setJSONStatus,
+  filters,
+  filterToName,
+  filterToCondition,
+  filterToShowList,
+  showToInfo,
 }) => {
   const [localPluginName, setLocalPluginName] = React.useState(pluginName);
   const [localPluginType, setLocalPluginType] = React.useState(pluginType);
@@ -66,6 +83,29 @@ const BasicPluginInfoView: React.FC<ICreateContext & WithStyles<typeof styles>> 
 
   return (
     <div>
+      <JsonMenu
+        pluginName={localPluginName}
+        pluginType={localPluginType}
+        displayName={localDisplayName}
+        emitAlerts={localEmitAlerts}
+        emitErrors={localEmitErrors}
+        configurationGroups={configurationGroups}
+        groupToInfo={groupToInfo}
+        groupToWidgets={groupToWidgets}
+        widgetInfo={widgetInfo}
+        widgetToAttributes={widgetToAttributes}
+        liveView={liveView}
+        setLiveView={setLiveView}
+        outputName={outputName}
+        setPluginState={setPluginState}
+        JSONStatus={JSONStatus}
+        setJSONStatus={setJSONStatus}
+        filters={filters}
+        filterToName={filterToName}
+        filterToCondition={filterToCondition}
+        filterToShowList={filterToShowList}
+        showToInfo={showToInfo}
+      />
       <Heading type={HeadingTypes.h3} label="Basic Plugin Information" />
       <div className={classes.basicPluginInput}>
         <PluginInput

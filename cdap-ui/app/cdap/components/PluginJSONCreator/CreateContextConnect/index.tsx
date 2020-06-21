@@ -14,6 +14,7 @@
  * the License.
  */
 
+import { JSONStatusMessage } from 'components/PluginJSONCreator/Create/Content/JsonMenu';
 import * as React from 'react';
 
 export const CreateContext = React.createContext({});
@@ -27,11 +28,34 @@ interface ICreateState {
   emitErrors: boolean;
   configurationGroups: string[];
   groupToInfo: any;
+  groupToWidgets: any;
+  widgetInfo: any;
+  widgetToAttributes: any;
+  liveView: boolean;
+  outputName: string;
+  JSONStatus: JSONStatusMessage;
+  filters: string[];
+  filterToName: any;
+  filterToCondition: any;
+  filterToShowList: any;
+  showToInfo: any;
 
   setActiveStep: (step: number) => void;
   setBasicPluginInfo: (basicPluginInfo: IBasicPluginInfo) => void;
   setConfigurationGroups: (groups: string[]) => void;
   setGroupToInfo: (groupToInfo: any) => void;
+  setGroupToWidgets: (groupToWidgets: any) => void;
+  setWidgetInfo: (widgetInfo: any) => void;
+  setWidgetToAttributes: (widgetToAttributes: any) => void;
+  setLiveView: (liveView: boolean) => void;
+  setOutputName: (outputName: string) => void;
+  setPluginState: (pluginState: any) => void;
+  setJSONStatus: (JSONStatus: JSONStatusMessage) => void;
+  setFilters: (filters: string[]) => void;
+  setFilterToName: (filterToName: any) => void;
+  setFilterToCondition: (filterToCondition: any) => void;
+  setFilterToShowList: (filterToShowList: any) => void;
+  setShowToInfo: (showToInfo: any) => void;
 }
 
 export interface IBasicPluginInfo {
@@ -45,6 +69,13 @@ export interface IBasicPluginInfo {
 export interface IConfigurationGroupInfo {
   label: string;
   description?: string;
+}
+
+export interface IWidgetInfo {
+  name: string;
+  label: string;
+  widgetType: string;
+  widgetCategory?: string;
 }
 
 export type ICreateContext = Partial<ICreateState>;

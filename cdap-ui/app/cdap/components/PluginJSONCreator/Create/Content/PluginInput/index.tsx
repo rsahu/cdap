@@ -25,14 +25,16 @@ const PluginInput = ({
   placeholder = '',
   delimeter = null,
   options = null,
-  required = true,
+  required = false,
   keyPlaceholder = null,
   valuePlaceholder = null,
   kvDelimiter = null,
+  layout = null,
 }) => {
   let widgetAttributes;
   if (widgetType !== 'toggle') {
     widgetAttributes = {
+      ...(layout && { layout }),
       ...(delimeter && { delimeter }),
       ...(options && { options }),
       ...(placeholder && { placeholder }),
