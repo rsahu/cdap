@@ -30,6 +30,8 @@ import globalEvents from 'services/global-events';
 import ee from 'event-emitter';
 require('./Home.scss');
 
+import Playground from 'components/LogViewer/Playground';
+
 const EntityListView = Loadable({
   loader: () => import(/* webpackChunkName: "EntityListView" */ 'components/EntityListView'),
   loading: LoadingSVGCentered,
@@ -195,13 +197,14 @@ export default class Home extends Component {
             render={(props) => {
               return (
                 <ToggleExperiment
-                  name="Virtual Scrolling"
+                  name="virtual-scroll-demo"
                   defaultComponent={<Page404 {...props} />}
                   experimentalComponent={<VirtualScrollDemo />}
                 />
               );
             }}
           />
+          <Route exact path="/ns/:namespace/logs" component={Playground} />
           <Route
             exact
             path="/ns/:namespace/lab-experiment-test"

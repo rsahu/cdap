@@ -14,17 +14,38 @@
  * the License.
  */
 
-import withStyles, { StyleRules, WithStyles } from '@material-ui/core/styles/withStyles';
+import withStyles, { StyleRules } from '@material-ui/core/styles/withStyles';
 import If from 'components/If';
 import LoadingSVGCentered from 'components/LoadingSVGCentered';
-import { JSONStatusMessage } from 'components/PluginJSONCreator/Create/Content/JsonMenu';
-import { STEPS } from 'components/PluginJSONCreator/Create/steps';
+import { JSONStatusMessage } from 'components/PluginJSONCreator/constants';
 import {
-  CreateContext,
-  createContextConnect,
-  ICreateContext,
-} from 'components/PluginJSONCreator/CreateContextConnect';
+  ConfigurationGroupContext,
+  FilterContext,
+  OutputContext,
+  PluginInfoContext,
+  useAppInternalState,
+  WidgetContext,
+} from 'components/PluginJSONCreator/Create';
+import ConfigurationGroupPage from 'components/PluginJSONCreator/Create/Content/ConfigurationGroupPage';
+import FilterPage from 'components/PluginJSONCreator/Create/Content/FilterPage';
+import OutputPage from 'components/PluginJSONCreator/Create/Content/OutputPage';
+import PluginInfoPage from 'components/PluginJSONCreator/Create/Content/PluginInfoPage';
 import * as React from 'react';
+
+export const STEPS = [
+  {
+    label: 'Basic Plugin Information',
+  },
+  {
+    label: 'Configuration Groups',
+  },
+  {
+    label: 'Output',
+  },
+  {
+    label: 'Filters',
+  },
+];
 
 const styles = (theme): StyleRules => {
   return {
@@ -36,20 +57,18 @@ const styles = (theme): StyleRules => {
       maxWidth: '1000px',
       minWidth: '600px',
     },
-    comp: {
-      borderRight: `1px solid ${theme.palette.grey[400]}`,
-      width: '60%',
-      color: `${theme.palette.grey[400]}`,
-    },
   };
 };
 
-const ContentView: React.FC<ICreateContext & WithStyles<typeof styles>> = ({
+const ContentView = ({
   classes,
-  activeStep,
-  JSONStatus,
-  setJSONStatus,
+  pluginInfoContextValue,
+  configuratioGroupContextValue,
+  widgetContextValue,
+  outputContextValue,
+  filterContextValue,
 }) => {
+  const { activeStep, JSONStatus, setJSONStatus } = useAppInternalState();
   const [loading, setLoading] = React.useState(false);
 
   // When JSON status was successful, show loading view for 500ms
@@ -69,11 +88,45 @@ const ContentView: React.FC<ICreateContext & WithStyles<typeof styles>> = ({
     }
   }, [JSONStatus]);
 
-  if (!STEPS[activeStep] || !STEPS[activeStep].component) {
+  if (!STEPS[activeStep]) {
     return null;
   }
 
-  const Comp = STEPS[activeStep].component;
+  const renderContentPage = () => {
+    switch (activeStep) {
+      case 0:
+        return (
+          <PluginInfoContext.Provider value={pluginInfoContextValue}>
+            <PluginInfoPage />
+          </PluginInfoContext.Provider>
+        );
+      case 1:
+        return (
+          <ConfigurationGroupContext.Provider value={configuratioGroupContextValue}>
+            <WidgetContext.Provider value={widgetContextValue}>
+              <ConfigurationGroupPage />
+            </WidgetContext.Provider>
+          </ConfigurationGroupContext.Provider>
+        );
+      case 2:
+        return (
+          <OutputContext.Provider value={outputContextValue}>
+            <OutputPage />
+          </OutputContext.Provider>
+        );
+      case 3:
+        return (
+          <FilterContext.Provider value={filterContextValue}>
+            <WidgetContext.Provider value={widgetContextValue}>
+              <FilterPage />
+            </WidgetContext.Provider>
+          </FilterContext.Provider>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div>
       <If condition={loading}>
@@ -81,15 +134,12 @@ const ContentView: React.FC<ICreateContext & WithStyles<typeof styles>> = ({
       </If>
       <If condition={!loading}>
         <div className={classes.root}>
-          <div className={classes.content}>
-            <Comp className={classes.comp} />
-          </div>
+          <div className={classes.content}>{renderContentPage()}</div>
         </div>
       </If>
     </div>
   );
 };
 
-const StyledContentView = withStyles(styles)(ContentView);
-const Content = createContextConnect(CreateContext, StyledContentView);
+const Content = withStyles(styles)(ContentView);
 export default Content;
